@@ -1,8 +1,11 @@
 package com.Serah.DoctorAppointmentSystem.appointment.dto;
 
+import com.Serah.DoctorAppointmentSystem.doctor.entity.Doctor;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,10 +13,10 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class AppointmentRequest {
-
-    private String username;
-    private String password;
-    private LocalDate localDate;
-    private String message;
+    private String complain;
+    private Date appointmentDate;
+    private Long patientId;
+    //private Long doctorId;
+    private Doctor doctorId;
 
 }

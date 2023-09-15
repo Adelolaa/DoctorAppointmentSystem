@@ -14,4 +14,5 @@ public class Data {
     private String email;
     private String description;
     private String speciality;
+    private String username;
 }

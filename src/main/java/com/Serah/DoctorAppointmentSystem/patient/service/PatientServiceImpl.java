@@ -10,6 +10,7 @@ import com.Serah.DoctorAppointmentSystem.response.Data;
 import com.Serah.DoctorAppointmentSystem.response.Response;
 import com.Serah.DoctorAppointmentSystem.role.RoleRepository;
 import com.Serah.DoctorAppointmentSystem.role.Roles;
+import com.Serah.DoctorAppointmentSystem.security.JwtTokenProvider;
 import com.Serah.DoctorAppointmentSystem.security.dto.LoginRequest;
 import com.Serah.DoctorAppointmentSystem.utils.AccountUtil;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -34,18 +36,20 @@ public class PatientServiceImpl implements PatientService {
        private final PasswordEncoder passwordEncoder;
        private final EmailService emailService;
        private final AuthenticationManager authenticationManager;
+       private final JwtTokenProvider jwtTokenProvider;
 
-    public PatientServiceImpl(PatientRepository patientRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService, AuthenticationManager authenticationManager) {
+    public PatientServiceImpl(PatientRepository patientRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.patientRepository = patientRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
     @Override
-    public ResponseEntity<Response> signUp(PatientRequest patientRequest) {
+    public ResponseEntity<Response> signup(PatientRequest patientRequest) {
 
         boolean isEmailExist = patientRepository.existsByEmail(patientRequest.getEmail());
         if (isEmailExist) {
@@ -63,6 +67,9 @@ public class PatientServiceImpl implements PatientService {
                     .age(patientRequest.getAge())
                     .name(patientRequest.getName())
                     .gender(patientRequest.getGender())
+                    .username(patientRequest.getUsername())
+                    .address(patientRequest.getAddress())
+                    .nextOfKin(patientRequest.getNextOfKin())
                     .password(passwordEncoder.encode(patientRequest.getPassword()))
 
                     .role(Collections.singleton(roles))
@@ -74,7 +81,7 @@ public class PatientServiceImpl implements PatientService {
             EmailDetails message = EmailDetails.builder()
                     .recipient(savedPatient.getEmail())
                     .subject("Account Created Successfully")
-                    .messageBody("You're Welcome to Doc on the Go." + "Your username is " + savedPatient.getEmail())
+                    .messageBody("You're Welcome to Doc on the Go." + "Your username is " + savedPatient.getUsername())
                     .build();
             emailService.sendSimpleEmail(message);
 
@@ -85,6 +92,7 @@ public class PatientServiceImpl implements PatientService {
                     .data(Data.builder()
                             .name(savedPatient.getName())
                             .email(savedPatient.getEmail())
+                            .username(savedPatient.getUsername())
                             .description("User Created Successfully")
                             .build())
                     .build());
@@ -92,25 +100,43 @@ public class PatientServiceImpl implements PatientService {
 
 
     @Override
-    public ResponseEntity<Response>signIn(LoginRequest loginRequest) {
-            boolean exists = patientRepository.existsByEmail(loginRequest.getEmail());
+    public ResponseEntity<Response>signin(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        authentication.getName();
+        authentication.getCredentials();
 
-            if (!exists ){
-                return ResponseEntity.ok(Response.builder()
-                        .responseCode(AccountUtil.UNSUCCESSFUL_LOGIN_RESPONSE_CODE)
-                        .responseMessage(AccountUtil.USERNAME_OR_PASSWORD_INCORRECT_MESSAGE)
-                        .build());
-            }else {
+        return new  ResponseEntity<>(
+                Response.builder()
+                        .responseCode(AccountUtil.SUCCESSFUL_LOGIN_RESPONSE_CODE)
+                        .responseMessage(AccountUtil.SUCCESSFUL_LOGIN_MESSAGE)
+                        .data(Data.builder()
+                                .name(authentication.getName())
+                                .description("token: " + jwtTokenProvider.generateToken(authentication))
+                                .build())
+                        .build(), HttpStatus.CREATED);
 
-                Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                return new ResponseEntity<>(
-                        Response.builder()
-                                .responseCode(AccountUtil.SUCCESSFUL_LOGIN_RESPONSE_CODE)
-                                .responseMessage(AccountUtil.SUCCESSFUL_LOGIN_MESSAGE)
-                                .build(), HttpStatus.CREATED);
-            }
+
+//            boolean exists = patientRepository.existsByEmail(loginRequest.getEmail());
+//
+//            if (!exists ){
+//                return ResponseEntity.ok(Response.builder()
+//                        .responseCode(AccountUtil.UNSUCCESSFUL_LOGIN_RESPONSE_CODE)
+//                        .responseMessage(AccountUtil.USERNAME_OR_PASSWORD_INCORRECT_MESSAGE)
+//                        .build());
+//            }else {
+//
+//                Authentication authentication = authenticationManager.authenticate(
+//                        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                return new ResponseEntity<>(
+//                        Response.builder()
+//                                .responseCode(AccountUtil.SUCCESSFUL_LOGIN_RESPONSE_CODE)
+//                                .responseMessage(AccountUtil.SUCCESSFUL_LOGIN_MESSAGE)
+//                                .build(), HttpStatus.CREATED);
+//            }
         }
     @Override
     public ResponseEntity<Response> resetPassword(LoginRequest loginRequest) {
@@ -156,11 +182,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Response getPatientByEmail(GetRequest getRequest) {
+    public Response getPatientByEmail(String email) {
 
-        boolean isExistsByEmail= patientRepository.existsByEmail(getRequest.getEmail());
+        boolean isExistsByEmail= patientRepository.existsByEmail(email);
         if (isExistsByEmail){
-            Patient patients = patientRepository.findByEmail(getRequest.getEmail()).get();
+            Patient patients = patientRepository.findByEmail(email).get();
 
             return Response.builder()
                     .responseCode(AccountUtil.SUCCESS_MESSAGE_CODE)
@@ -180,4 +206,94 @@ public class PatientServiceImpl implements PatientService {
                     .build();
         }
     }
+
+//    @Override
+//    public ResponseEntity<Response> updatePatient(PatientRequest patientRequest) {
+//        boolean isExistsByEmail = patientRepository.existsByEmail(patientRequest.getEmail());
+//        if (isExistsByEmail) {
+//            Patient patient = Patient.builder()
+//                    .username(patientRequest.getUsername())
+//                    .name(patientRequest.getName())
+//                    .email(patientRequest.getEmail())
+//                    .gender(patientRequest.getGender())
+//                    .age(patientRequest.getAge())
+//                    //.dateOfBirth(patientRequest.getDateOfBirth())
+//                    .address(patientRequest.getAddress())
+//                    .nextOfKin(patientRequest.getNextOfKin())
+//                    .build();
+//
+//            Patient savedPatient = patientRepository.save(patient);
+//
+//            EmailDetails message = EmailDetails.builder()
+//                    .recipient(savedPatient.getEmail())
+//                    .subject("Account Successfully Updated")
+//                    .messageBody(savedPatient.getUsername() + "Your Doc on the Go account has been successfully updated ")
+//                    .build();
+//            emailService.sendSimpleEmail(message);
+//
+//
+//            return ResponseEntity.ok(Response.builder()
+//                    .responseCode(AccountUtil.USER_UPDATE_SUCCESS_CODE)
+//                    .responseMessage(AccountUtil.USER_UPDATE_SUCCESS_MESSAGE)
+//                    .data(Data.builder()
+//                            .username(patientRequest.getUsername())
+//                            .description("User Updated Successfully")
+//                            .build())
+//                    .build());
+//
+//        }else return ResponseEntity.ofNullable(Response.builder()
+//                .responseCode(AccountUtil.USER_NOT_FOUND_CODE)
+//                .responseMessage(AccountUtil.USER_NOT_FOUND_MESSAGE)
+//                .data(null)
+//                .build());
+
+   // }
+    @Override
+    public ResponseEntity<Response> updatePatient(PatientRequest patientRequest) {
+        Optional<Patient> existingPatientOptional = patientRepository.findByEmail(patientRequest.getEmail());
+
+        if (existingPatientOptional.isPresent()) {
+
+
+            Patient existingPatient = existingPatientOptional.get();
+
+
+            existingPatient.setUsername(patientRequest.getUsername());
+            existingPatient.setName(patientRequest.getName());
+            existingPatient.setGender(patientRequest.getGender());
+            existingPatient.setAge(patientRequest.getAge());
+            existingPatient.setAddress(patientRequest.getAddress());
+            existingPatient.setNextOfKin(patientRequest.getNextOfKin());
+
+            // Save the updated patient information
+            Patient updatedPatient = patientRepository.save(existingPatient);
+
+            // Send an email notification about the account update
+            EmailDetails message = EmailDetails.builder()
+                    .recipient(updatedPatient.getEmail())
+                    .subject("Account Successfully Updated")
+                    .messageBody(updatedPatient.getUsername() + ", your Doc on the Go account has been successfully updated.")
+                    .build();
+            emailService.sendSimpleEmail(message);
+
+            // Return a success response
+            return ResponseEntity.ok(Response.builder()
+                    .responseCode(AccountUtil.USER_UPDATE_SUCCESS_CODE)
+                    .responseMessage(AccountUtil.USER_UPDATE_SUCCESS_MESSAGE)
+                    .data(Data.builder()
+                            .username(updatedPatient.getUsername())
+                            .description("User Updated Successfully")
+                            .build())
+                    .build());
+        } else {
+            // The patient with the given email does not exist, so return an error response
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.builder()
+                    .responseCode(AccountUtil.USER_NOT_FOUND_CODE)
+                    .responseMessage(AccountUtil.USER_NOT_FOUND_MESSAGE)
+                    .data(null)
+                    .build());
+        }
+    }
+
+
 }

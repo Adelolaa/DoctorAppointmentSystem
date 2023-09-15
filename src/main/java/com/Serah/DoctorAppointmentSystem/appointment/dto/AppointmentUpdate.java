@@ -13,4 +13,5 @@ public class AppointmentUpdate {
     private String doctorFirstName;
     private String doctorLastName;
     private String response;
+
 }

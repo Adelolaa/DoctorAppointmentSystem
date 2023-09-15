@@ -7,7 +7,6 @@ import com.Serah.DoctorAppointmentSystem.response.Response;
 import com.Serah.DoctorAppointmentSystem.security.dto.LoginRequest;
 import org.springframework.http.ResponseEntity;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,9 +20,13 @@ public interface DoctorService {
 
      List<Response> getAllDoctor();
 
+//    List<Doctor> findDoctorBySpecialty(String specialty);
+
+    List<Doctor> getDoctorsBySpeciality(String speciality);
+
     Doctor randomDoctorOnSpecificDay(LocalDate localDate);
 
-    Doctor randomizingRandomDoctors(Doctor doctor, LocalDate localDate);
+    Doctor randomizingRandomDoctors(Doctor previousDoctor, LocalDate localDate);
 
     String deleteDoctor(long id);
 }

@@ -2,28 +2,31 @@ package com.Serah.DoctorAppointmentSystem.appointment.service;
 
 import com.Serah.DoctorAppointmentSystem.appointment.dto.AppointmentRequest;
 import com.Serah.DoctorAppointmentSystem.appointment.dto.AppointmentResponse;
-import com.Serah.DoctorAppointmentSystem.patient.dto.PatientRequest;
-import com.Serah.DoctorAppointmentSystem.response.Response;
-import org.springframework.http.ResponseEntity;
+import com.Serah.DoctorAppointmentSystem.appointment.entity.Appointment;
+
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AppointmentService {
 
-    AppointmentResponse createAppointment(AppointmentRequest appointmentRequestDto);
-
+    String bookAppointment(AppointmentRequest appointmentRequest);
+//    boolean acceptBooking (Long id);
+// String acceptAppointment(Long doctorId, Long appointmentId);
     AppointmentResponse updateAppointment(Long id);
 
-    List<AppointmentResponse> viewAllAppointments();
+    //Optional<Appointment> findById(long id);
+
+    List<AppointmentResponse> findAllAppointments();
 
     List<AppointmentResponse> findAppointmentByUser(String username);
 
-    AppointmentResponse viewSingleAppointment(Long id);
+    AppointmentResponse findSingleAppointment(Long id);
 
     String markAppointmentAsFulfilled(Long id);
 
-    List<AppointmentResponse> fetchFulfilledAppointments();
+    List<AppointmentResponse> findFulfilledAppointments();
 
-    List<AppointmentResponse> fetchUnfulfilledAppointments();
+    List<AppointmentResponse> findUnfulfilledAppointments();
 
 }

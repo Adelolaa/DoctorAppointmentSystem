@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,12 +34,16 @@ public class Doctor {
     private String password;
     private String gender;
     private String description;
-    private boolean isAvailable; private String availableDays;
+    private boolean isAvailable;
+    private String availableDays;
+    private String uniqueIdentifier;
     @CreationTimestamp
     private LocalDate dateCreated;
     @UpdateTimestamp
     private LocalDate dateUpdated;
-
+// @ElementCollection
+// private List<Long> acceptedAppointments = new ArrayList<>();
+//
  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
  @JoinTable(name = "doctor_roles", joinColumns = @JoinColumn(name = "doctor_id", referencedColumnName = "id"),
          inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))

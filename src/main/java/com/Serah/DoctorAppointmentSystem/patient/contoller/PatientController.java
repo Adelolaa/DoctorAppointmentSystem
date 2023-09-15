@@ -20,13 +20,13 @@ public class PatientController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Response> registerPatient(@RequestBody PatientRequest patientRequest){
-        return patientService.signUp(patientRequest);
+    public ResponseEntity<Response> signup(@RequestBody PatientRequest patientRequest){
+        return patientService.signup(patientRequest);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<Response> loginUsers(@RequestBody LoginRequest loginRequest){
-        return patientService.signIn(loginRequest);
+    public ResponseEntity<Response> signin(@RequestBody LoginRequest loginRequest){
+        return patientService.signin(loginRequest);
     }
 
     @PutMapping("/resetPassword")
@@ -34,14 +34,20 @@ public class PatientController {
         return patientService.resetPassword(loginRequest);
     }
 
-    @GetMapping("/getPatientByUsername")
-    public ResponseEntity<Response> getPatientByUsername(@RequestBody GetRequest getRequest){
-        return ResponseEntity.ok(patientService.getPatientByEmail(getRequest));
+    @GetMapping("/{Email}")
+    public ResponseEntity<Response> getPatientByEmail(@PathVariable(name = "Email",required = true) String email){
+        return ResponseEntity.ok(patientService.getPatientByEmail(email));
     }
 
     @GetMapping("/getAllPatients")
     public List<Response> getAllPatients(){
         return patientService.getAllPatient();
     }
+
+
+@PostMapping("/updatePatient")
+public ResponseEntity<Response> updatePatient(@RequestBody PatientRequest patientRequest){
+        return ResponseEntity.ok(patientService.updatePatient(patientRequest).getBody());
+}
 
 }

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Builder
@@ -23,13 +24,12 @@ public class Patient {
     private String name;
     private String email;
     private String gender;
-    private String complain;
-    private String age;
     private String password;
     private String username;
+    private String age;
     private String address;
     private String nextOfKin;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "patient_roles",
@@ -37,6 +37,6 @@ public class Patient {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Roles> role;
 
-    @ManyToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments;
 }

@@ -1,7 +1,9 @@
 package com.Serah.DoctorAppointmentSystem.doctor.controller;
 import com.Serah.DoctorAppointmentSystem.doctor.dto.DoctorRequest;
 import com.Serah.DoctorAppointmentSystem.doctor.dto.GetRequest;
+import com.Serah.DoctorAppointmentSystem.doctor.entity.Doctor;
 import com.Serah.DoctorAppointmentSystem.doctor.service.DoctorService;
+import com.Serah.DoctorAppointmentSystem.patient.service.PatientService;
 import com.Serah.DoctorAppointmentSystem.response.Response;
 import com.Serah.DoctorAppointmentSystem.security.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class DoctorController {
 
 
     private final DoctorService doctorService;
+    private final PatientService patientService;
 
     @PostMapping("/create")
     public Response createAccount(@RequestBody DoctorRequest doctorRequest) {
@@ -26,6 +29,11 @@ public class DoctorController {
     @PostMapping("/signin")
     ResponseEntity<Response> signIn(@RequestBody LoginRequest loginRequest) {
         return doctorService.signIn(loginRequest);
+    }
+
+    @PostMapping("/signin/new")
+    public ResponseEntity<Response> signin(@RequestBody LoginRequest loginRequest) {
+        return patientService.signin(loginRequest);
     }
 
     @PutMapping("/resetpassword")
@@ -48,5 +56,10 @@ public class DoctorController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteDoctor(@PathVariable("id") long id) {
         return ResponseEntity.ok(doctorService.deleteDoctor(id));
+    }
+
+    @GetMapping("/get/{speciality}")
+    public List<Doctor> getDoctorsBySpeciality(@PathVariable(name = "speciality",required = true) String speciality) {
+        return doctorService.getDoctorsBySpeciality(speciality);
     }
 }

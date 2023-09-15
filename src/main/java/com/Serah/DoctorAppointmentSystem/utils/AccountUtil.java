@@ -1,5 +1,7 @@
 package com.Serah.DoctorAppointmentSystem.utils;
 
+import org.springframework.security.core.parameters.P;
+
 public class AccountUtil {
     public static final String USER_EXISTS_CODE="001";
     public static final String USER_EXISTS_MESSAGE="User already exist";
@@ -21,6 +23,9 @@ public class AccountUtil {
     public static final String APPOINTMENT_NOT_ACCEPT_CODE = "010";
     public static final String APPOINTMENT_NOT_ACCEPT_MESSAGE = "Appointment Not Accepted";
     public static final String USERNAME_OR_PASSWORD_INCORRECT_MESSAGE = "Username or Password Incorrect";
+    public static final String USER_UPDATE_SUCCESS_CODE = "011";
+    public static final String USER_UPDATE_SUCCESS_MESSAGE = "Account Updated Successfully";
+
 
 
 

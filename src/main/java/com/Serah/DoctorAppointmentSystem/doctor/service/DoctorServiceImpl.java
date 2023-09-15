@@ -6,7 +6,6 @@ import com.Serah.DoctorAppointmentSystem.doctor.entity.Doctor;
 import com.Serah.DoctorAppointmentSystem.doctor.repository.DoctorRepository;
 import com.Serah.DoctorAppointmentSystem.email.EmailDetails;
 import com.Serah.DoctorAppointmentSystem.email.EmailService;
-import com.Serah.DoctorAppointmentSystem.patient.entity.Patient;
 import com.Serah.DoctorAppointmentSystem.response.Data;
 import com.Serah.DoctorAppointmentSystem.response.Response;
 import com.Serah.DoctorAppointmentSystem.role.Roles;
@@ -31,7 +30,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 //import static org.apache.catalina.valves.AbstractAccessLogValve.localDate;
 
@@ -49,6 +48,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Response createAccount(DoctorRequest doctorRequest) {
+        String uniqueIdentifier = UUID.randomUUID().toString();
         if (doctorRepository.existsByEmail(doctorRequest.getEmail()))
             return Response.builder()
                     .responseCode(AccountUtil.USER_EXISTS_CODE)
@@ -66,6 +66,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .workingHours(doctorRequest.getWorkingHours())
                 .description(doctorRequest.getDescription())
                 .gender(doctorRequest.getGender())
+                .uniqueIdentifier(uniqueIdentifier)
                 .build();
 
 
@@ -93,8 +94,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .data(Data.builder()
                         .name(doctorRequest.getName())
                         .email(doctorRequest.getEmail())
-                        .description("Welcome to Doc on the Go" +
-                                "\n" + "Healthcare that goes where you go")
+                        .description("Account Successfully Created")
                         .build())
                 .build();
 
@@ -165,8 +165,6 @@ public class DoctorServiceImpl implements DoctorService {
                             .build())
                     .build();
 
-
-
         }else{
             log.info("not exist");
             return Response.builder()
@@ -198,6 +196,20 @@ public class DoctorServiceImpl implements DoctorService {
         return responses;
     }
 
+
+
+
+    @Override
+    public List<Doctor> getDoctorsBySpeciality(String speciality) {
+        return doctorRepository.findBySpeciality(speciality);
+
+    }
+//    @Override
+//    public List<Doctor> getDoctorsBySpeciality(String speciality) {
+//        List<Doctor> doctors = doctorRepository.findBySpeciality(speciality);
+//        return doctors;
+
+
     @Override
     public Doctor randomDoctorOnSpecificDay(LocalDate localDate) {
         List<Doctor> doctors = new ArrayList<>(doctorRepository.findAll().stream()
@@ -226,6 +238,7 @@ public class DoctorServiceImpl implements DoctorService {
             doctorRepository.save(doctor);
             return "Doctor  deleted successfully";
     }
+
 
 }
 

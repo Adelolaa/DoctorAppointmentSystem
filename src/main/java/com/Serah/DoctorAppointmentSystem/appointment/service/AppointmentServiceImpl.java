@@ -9,21 +9,22 @@ import com.Serah.DoctorAppointmentSystem.doctor.repository.DoctorRepository;
 import com.Serah.DoctorAppointmentSystem.doctor.service.DoctorService;
 import com.Serah.DoctorAppointmentSystem.email.EmailDetails;
 import com.Serah.DoctorAppointmentSystem.email.EmailService;
-import com.Serah.DoctorAppointmentSystem.patient.dto.PatientRequest;
 import com.Serah.DoctorAppointmentSystem.patient.entity.Patient;
 import com.Serah.DoctorAppointmentSystem.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,130 +33,169 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     private final AppointmentRepository appointmentRepository;
-
     private final PatientRepository patientRepository;
-    private DoctorRepository doctorRepository;
-    private DoctorService doctorService;
-    private EmailService emailService;
-    private ModelMapper modelMapper;
+    private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
+    private final EmailService emailService;
+//    private final Patient patient;
+//    private final Doctor doctor;
 
 
     @Override
-    public AppointmentResponse createAppointment(AppointmentRequest appointmentRequest) {
+    public String bookAppointment(AppointmentRequest appointmentRequest) {
+        //check doctor has been booked for chosen date;
+        // return error response doctor not available for the date chosen
+        Optional<Appointment>appointmentOptional = appointmentRepository.findAppointmentByDoctorIdAndAppointmentDate
+        (appointmentRequest.getDoctorId(),appointmentRequest.getAppointmentDate());
 
-        Patient patient = patientRepository.findUserByUsername(appointmentRequest.getUsername()).orElseThrow(() -> new
-                ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (appointmentOptional.isPresent()) {
+            Appointment appointment = appointmentOptional.get();
 
+            EmailDetails emailDetails = EmailDetails.builder()
+                    .recipient(appointment.getEmail())
+                    .subject("Appointment Not Booked ")
+                    .messageBody("Dear"+" "+appointment.getPatient().getName()  + ", Your appointment has not been successfully booked." + "Kindly choose another date.")
+                    .build();
+
+            return "Appointment Date has already been Booked";
+        }
         Appointment appointment = Appointment.builder()
-                .appointmentDate(String.valueOf(appointmentRequest.getLocalDate()))
-                .patient((Set<Patient>) patient)
-                .comments(appointmentRequest.getMessage())
-                .remarks("Appointment successfully booked")
-                .isFulfilled(false)
-                .doctor(doctorService.randomDoctorOnSpecificDay(appointmentRequest.getLocalDate()))
+                .appointmentDate(appointmentRequest.getAppointmentDate())
+                .id(appointmentRequest.getPatientId())
+                .complain(appointmentRequest.getComplain())
+                //.doctorId(appointmentRequest.getDoctorId())
                 .build();
-
         appointmentRepository.save(appointment);
-        Doctor doctor = doctorRepository.findById(appointment.getDoctor().getId()).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         EmailDetails emailDetails = EmailDetails.builder()
-                .recipient(patient.getEmail())
+                .recipient(appointment.getEmail())
                 .subject("Appointment Booked Successfully")
-                .messageBody("Hi " + patient.getUsername() + ", Our Doctors are here to care for you 24/7.\n" +
-                        "\n" +
-                        "           Our amiable  Dr. " + doctor.getName()  + " will be at your service on your preferred date " + appointmentRequest.getLocalDate() + "\n" +
-                        "           Doc on the Go, Healthcare that goes where you go.")
+                .messageBody("Dear"+" "+appointment.getPatient().getName()  + ", Your appointment has been successfully booked."+ " "+"Your appointment date is"+ " "+appointmentRequest.getAppointmentDate())
                 .build();
 
         emailService.sendSimpleEmail(emailDetails);
+        return "Appointment Successfully Booked";
 
-
-
-        return AppointmentResponse.builder()
-                .username(appointment.getPatient().stream().map(username -> patient.getUsername()).toString())
-                .name(doctor.getName())
-                .response(appointment.getRemarks())
-                .build();
     }
+
 
     @Override
     public AppointmentResponse updateAppointment(Long id) {
-        Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Doctor doctor = appointment.getDoctor();
-        appointment.setDoctor(doctorService.randomizingRandomDoctors(doctor, LocalDate.parse(appointment.getAppointmentDate())));
-        appointmentRepository.save(appointment);
-        return modelMapper.map(appointment, AppointmentResponse.class);
+        return null;
     }
 
     @Override
-    public List<AppointmentResponse> viewAllAppointments() {
-        return appointmentRepository.findAll().stream().map(appointmentEntity -> AppointmentResponse.builder()
-                .username(appointmentEntity.getPatient().getClass().getName())
-                .name(appointmentEntity.getDoctor().getName())
-                .response(appointmentEntity.getRemarks())
-                .build()).collect(Collectors.toList());
+    public List<AppointmentResponse> findAllAppointments() {
+        return null;
     }
 
     @Override
     public List<AppointmentResponse> findAppointmentByUser(String username) {
-        List<Appointment> list = appointmentRepository.findByPatient_Email(username);
-        List<AppointmentResponse> appointmentResponseList = new ArrayList<>();
-
-        for (Appointment element :list){
-            appointmentResponseList.add(AppointmentResponse.builder()
-                            .username(element.getPatient().getClass().getName())
-                            .name(element.getDoctor().getName())
-                            .response(element.getRemarks())
-                            .build());
-        }
-        return appointmentResponseList;
-
-     }
+        return null;
+    }
 
     @Override
-    public AppointmentResponse viewSingleAppointment(Long id) {
-        return appointmentRepository.findById(id).map(appointmentEntity -> AppointmentResponse.builder()
-                .username(appointmentEntity.getPatient().getClass().getName())
-                .name(appointmentEntity.getDoctor().getName())
-                .response(appointmentEntity.getRemarks())
-                .build()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public AppointmentResponse findSingleAppointment(Long id) {
+        return null;
     }
 
     @Override
     public String markAppointmentAsFulfilled(Long id) {
-        Appointment appointmentEntity = appointmentRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        appointmentEntity.setFulfilled(true);
-        appointmentRepository.save(appointmentEntity);
-        return "Appointment fulfilled";
+        return null;
     }
 
     @Override
-    public List<AppointmentResponse> fetchFulfilledAppointments() {
-        List<Appointment> appointmentEntities = appointmentRepository.findAll();
-        return appointmentEntities.stream().filter(Appointment::isFulfilled)
-                                    .map(appointmentEntity -> AppointmentResponse.builder()
-                .username(appointmentEntity.getPatient().getClass().getName())
-                .name(appointmentEntity.getDoctor().getName())
-                .response(appointmentEntity.getRemarks())
-                .build()).collect(Collectors.toList());
+    public List<AppointmentResponse> findFulfilledAppointments() {
+        return null;
     }
 
     @Override
-    public List<AppointmentResponse> fetchUnfulfilledAppointments() {
-        List<Appointment> appointmentEntities = appointmentRepository.findAll();
-        return appointmentEntities.stream().filter(appointment ->
-                !appointment.isFulfilled()).map(appointmentEntity -> AppointmentResponse.builder()
-                .username(appointmentEntity.getPatient().getClass().getName())
-                .name(appointmentEntity.getDoctor().getName())
-                .response(appointmentEntity.getRemarks())
-                .build()).collect(Collectors.toList());
+    public List<AppointmentResponse> findUnfulfilledAppointments() {
+        return null;
     }
 
 
+   // public boolean acceptBooking(Long appointmentId) {
+//        Optional<Appointment> appointmentOptional = appointmentRepository.findById(appointmentId);
+//
+//        if (appointmentOptional.isPresent()) {
+//            Appointment appointment = appointmentOptional.get();
+//            appointment.setStatus("Accepted");
+//            appointmentRepository.save(appointment);
+//            return true;
+//        } else {
+//            return false; // Appointment not found
+//        }
+//
+//    }
 
-}
+
+//        public String acceptAppointment(Long doctorId, Long appointmentId) {
+//            // Retrieve the doctor and appointment from repositories
+//            Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
+//            Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+////
+//            if (doctor == null || appointment == null) {
+//                return " Doctor or appointment not found";
+//            }
+//
+//            // Check if the doctor is available to accept the appointment
+//            if (!isDoctorAvailable(doctor, String.valueOf(doctor.getSpeciality().equalsIgnoreCase("speciality")))) {
+//                return "Doctor is not available to accept this appointment.";
+//            }
+//
+//            // Update appointment status and add it to the doctor's accepted appointments
+//            appointment.setStatus("Accepted");
+//            doctor.getAcceptedAppointments().add(appointment.getId());
+//
+//            appointmentRepository.save(appointment);
+//            doctorRepository.save(doctor);
+//
+//            // Send confirmation email to the patient (implement this)
+//
+//            EmailDetails emailDetails = EmailDetails.builder()
+//                    .subject("Appointment Booked Successfully")
+//                    .messageBody("Dear patients, Your appointment has been successfully booked. Our doctor will reach out to you.")
+//                    .build();
+//
+//            Set<Patient> patients = appointment.getPatients();
+//            for (Patient patient : patients) {
+//                String recipient = patient.getEmail();
+//                // Now, you can use the 'recipient' to send emails to each patient individually.
+//                // You can also access other patient details like patient.getName() if needed.
+//                // Send emails to each patient using the 'recipient' variable.
+//            }
+//
+//
+//            emailService.sendSimpleEmail(emailDetails);
+//
+//            return "Appointment accepted successfully.";
+//        }
+
+    private boolean isDoctorAvailable(Doctor doctor, String speciality) {
+        // Check if the doctor has the required speciality
+        return doctor.getSpeciality().equalsIgnoreCase(speciality);
+    }
+
+
+//        private boolean isDoctorAvailable(Doctor doctor, LocalDateTime appointmentDateTime) {
+//
+//            // Get the doctor's working hours (you may retrieve this from a database)
+//            LocalTime doctorWorkingHoursStart = LocalTime.of(9, 0); // e.g., 9:00 AM
+//            LocalTime doctorWorkingHoursEnd = LocalTime.of(17, 0);  // e.g., 5:00 PM
+//
+//            // Check if the appointment is within the doctor's working hours
+//            LocalTime appointmentTime = appointmentDateTime.toLocalTime();
+//            return !appointmentTime.isBefore(doctorWorkingHoursStart) && !appointmentTime.isAfter(doctorWorkingHoursEnd); // Appointment is outside of working hours
+
+
+        }
+
+
+
+
+
+
+
 
 

@@ -10,14 +10,15 @@ import java.util.List;
 
 public interface PatientService {
 
-    ResponseEntity<Response> signUp (PatientRequest patientRequest);
+    ResponseEntity<Response> signup (PatientRequest patientRequest);
 
-    ResponseEntity <Response> signIn (LoginRequest loginRequest);
+    ResponseEntity <Response> signin (LoginRequest loginRequest);
     ResponseEntity<Response> resetPassword(LoginRequest loginRequest);
 
     List<Response> getAllPatient();
 
-    Response getPatientByEmail(GetRequest getRequest);
+    Response getPatientByEmail(String email);
+    ResponseEntity<Response>updatePatient(PatientRequest patientRequest);
 
 
 }
