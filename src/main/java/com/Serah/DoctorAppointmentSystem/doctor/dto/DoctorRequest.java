@@ -18,5 +18,4 @@ public class DoctorRequest {
     private String description;
     private String password;
     private String gender;
-    private String uniqueIdentifier;
 }

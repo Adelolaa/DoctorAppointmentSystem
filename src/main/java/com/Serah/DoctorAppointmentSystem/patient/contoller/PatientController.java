@@ -21,6 +21,7 @@ public class PatientController {
 
     @PostMapping("/signup")
     public ResponseEntity<Response> signup(@RequestBody PatientRequest patientRequest){
+        System.out.println("==signing up patient===");
         return patientService.signup(patientRequest);
     }
 

@@ -15,8 +15,7 @@ import java.util.Date;
 public class AppointmentRequest {
     private String complain;
     private Date appointmentDate;
-    private Long patientId;
-    //private Long doctorId;
-    private Doctor doctorId;
-
+    private Long doctorId;
+    private  Long patientId;
+    private String patientEmail;
 }

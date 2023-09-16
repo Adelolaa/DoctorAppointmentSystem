@@ -38,10 +38,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             Doctor user = doctorRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User with provided Credentials not found " + email));
 
-            //retrieve roles associated with the user
             Set<GrantedAuthority> authorities = user.getRoles().stream()
                     .map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
-
 
             return new org.springframework.security.core.userdetails.User(user.getEmail(),
                     user.getPassword(), authorities);
@@ -49,7 +47,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             Patient patient = patientRepository.findByEmail(email) .orElseThrow(() -> new UsernameNotFoundException("User with provided Credentials not found " + email));;
             Set<GrantedAuthority> authorities = patient.getRole().stream()
                     .map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
-
 
             return new org.springframework.security.core.userdetails.User(patient.getEmail(),
                     patient.getPassword(), authorities);

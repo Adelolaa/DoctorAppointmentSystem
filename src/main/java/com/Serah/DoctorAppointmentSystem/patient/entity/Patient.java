@@ -37,6 +37,6 @@ public class Patient {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Roles> role;
 
-    @OneToMany(mappedBy = "patient")
-    private Set<Appointment> appointments;
+//    @OneToMany(mappedBy = "patient")
+//    private Set<Appointment> appointments;
 }

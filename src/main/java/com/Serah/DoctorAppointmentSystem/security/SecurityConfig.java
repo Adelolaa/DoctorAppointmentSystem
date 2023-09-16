@@ -49,13 +49,6 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public AuthenticationProvider authenticationProvider(){
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(customUserDetailsService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder());
-//        return authenticationProvider;
-//    }
 
 
     @Bean
@@ -86,7 +79,6 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 ).httpBasic(Customizer.withDefaults());
         http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

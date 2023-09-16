@@ -43,7 +43,7 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(bytes);
     }
 
-    //Extract Username from the generated token
+
 
     public String getUsername(String token){
         Claims claims = Jwts.parserBuilder()
@@ -55,7 +55,7 @@ public class JwtTokenProvider {
     }
 
 
-    //Validate the generated token
+
     public boolean validateToken( String token){
         try {
             Jwts.parserBuilder()

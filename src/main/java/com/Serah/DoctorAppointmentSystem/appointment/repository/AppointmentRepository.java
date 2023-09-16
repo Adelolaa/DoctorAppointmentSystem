@@ -5,22 +5,13 @@ import com.Serah.DoctorAppointmentSystem.doctor.entity.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
 
-    boolean existsByEmail (String email);
-//
-//    boolean existsById(Long id);
-//
-  //  Optional<Appointment> findById(Long id);
 
-    List<Appointment> findByEmail(String username);
-
-    Optional<Appointment>findAppointmentByDoctorIdAndAppointmentDate(Doctor id, Date date);
-
-
-//    Optional<Appointment> findByUniqueIdentifier(String UniqueIdentifier);
-    // boolean existsByAppointmentDate(String appointmentDate);
+    Optional<Appointment> findAppointmentByDoctorIdAndAppointmentDate(Long id, Date date);
 }
+
+
+

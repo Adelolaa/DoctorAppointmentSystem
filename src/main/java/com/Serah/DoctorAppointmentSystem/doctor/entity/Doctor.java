@@ -49,8 +49,4 @@ public class Doctor {
          inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
  private Set<Roles> roles;
 
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Appointment> appointments;
-
-
 }

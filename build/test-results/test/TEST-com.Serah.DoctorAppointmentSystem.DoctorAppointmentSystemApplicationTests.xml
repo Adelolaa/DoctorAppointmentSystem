@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-09-15T12:23:51" hostname="IACADEMY-SERAH" time="1.042">
+<testsuite name="com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-09-15T13:47:54" hostname="IACADEMY-SERAH" time="0.494">
   <properties/>
-  <testcase name="contextLoads()" classname="com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests" time="1.042"/>
-  <system-out><![CDATA[13:23:34.285 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests]: DoctorAppointmentSystemApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-13:23:34.386 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplication for test class com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests
+  <testcase name="contextLoads()" classname="com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests" time="0.494"/>
+  <system-out><![CDATA[14:47:36.082 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests]: DoctorAppointmentSystemApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:47:36.172 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplication for test class com.Serah.DoctorAppointmentSystem.DoctorAppointmentSystemApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -13,24 +13,24 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.1.2)
 
-2023-09-15T13:23:34.763+01:00  INFO 1168 --- [    Test worker] .DoctorAppointmentSystemApplicationTests : Starting DoctorAppointmentSystemApplicationTests using Java 19.0.2 with PID 1168 (started by Serah.Aleshinloye in C:\Users\serah.aleshinloye\Downloads\DoctorAppointmentSystem\DoctorAppointmentSystem)
-2023-09-15T13:23:34.765+01:00  INFO 1168 --- [    Test worker] .DoctorAppointmentSystemApplicationTests : No active profile set, falling back to 1 default profile: "default"
-2023-09-15T13:23:35.426+01:00  INFO 1168 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-15T13:23:35.504+01:00  INFO 1168 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 69 ms. Found 4 JPA repository interfaces.
-2023-09-15T13:23:36.013+01:00  INFO 1168 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-15T13:23:36.090+01:00  INFO 1168 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
-2023-09-15T13:23:36.092+01:00  INFO 1168 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
-2023-09-15T13:23:36.281+01:00  INFO 1168 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-09-15T13:23:36.421+01:00  INFO 1168 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2023-09-15T13:23:36.440+01:00  INFO 1168 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-09-15T13:23:40.342+01:00  INFO 1168 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3e2c4d4b
-2023-09-15T13:23:40.345+01:00  INFO 1168 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-09-15T13:23:41.446+01:00  INFO 1168 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-09-15T13:23:42.214+01:00  INFO 1168 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-15T13:23:49.932+01:00  INFO 1168 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-15T13:23:50.480+01:00  WARN 1168 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-09-15T13:23:50.587+01:00  INFO 1168 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1d86b636, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@e0c03bd, org.springframework.security.web.context.SecurityContextHolderFilter@f83616, org.springframework.security.web.header.HeaderWriterFilter@4e23ddf0, org.springframework.security.web.authentication.logout.LogoutFilter@18356d9e, com.Serah.DoctorAppointmentSystem.security.JwtAuthenticationFilter@54d9b23a, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@3fe59f84, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5f0bf0ed, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6f9e6a85, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@61e4a072, org.springframework.security.web.session.SessionManagementFilter@2df7766b, org.springframework.security.web.access.ExceptionTranslationFilter@3390621a, org.springframework.security.web.access.intercept.AuthorizationFilter@3507200d]
-2023-09-15T13:23:51.051+01:00  INFO 1168 --- [    Test worker] .DoctorAppointmentSystemApplicationTests : Started DoctorAppointmentSystemApplicationTests in 16.506 seconds (process running for 17.776)
+2023-09-15T14:47:36.557+01:00  INFO 17400 --- [    Test worker] .DoctorAppointmentSystemApplicationTests : Starting DoctorAppointmentSystemApplicationTests using Java 19.0.2 with PID 17400 (started by Serah.Aleshinloye in C:\Users\serah.aleshinloye\Downloads\DoctorAppointmentSystem\DoctorAppointmentSystem)
+2023-09-15T14:47:36.558+01:00  INFO 17400 --- [    Test worker] .DoctorAppointmentSystemApplicationTests : No active profile set, falling back to 1 default profile: "default"
+2023-09-15T14:47:37.251+01:00  INFO 17400 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-15T14:47:37.318+01:00  INFO 17400 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 59 ms. Found 4 JPA repository interfaces.
+2023-09-15T14:47:37.852+01:00  INFO 17400 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-15T14:47:37.918+01:00  INFO 17400 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-09-15T14:47:37.920+01:00  INFO 17400 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-09-15T14:47:38.070+01:00  INFO 17400 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-09-15T14:47:38.219+01:00  INFO 17400 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-09-15T14:47:38.239+01:00  INFO 17400 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-15T14:47:42.123+01:00  INFO 17400 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@286a4c52
+2023-09-15T14:47:42.127+01:00  INFO 17400 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-15T14:47:44.286+01:00  INFO 17400 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-09-15T14:47:44.912+01:00  INFO 17400 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-15T14:47:52.944+01:00  INFO 17400 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-15T14:47:53.530+01:00  WARN 17400 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-15T14:47:53.647+01:00  INFO 17400 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@52c2d1e8, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1a67bcaf, org.springframework.security.web.context.SecurityContextHolderFilter@5ab70df7, org.springframework.security.web.header.HeaderWriterFilter@cda988, org.springframework.security.web.authentication.logout.LogoutFilter@1a6df932, com.Serah.DoctorAppointmentSystem.security.JwtAuthenticationFilter@463746eb, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@257da215, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5a3d52a0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7a0f1f9d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4f4b7a2e, org.springframework.security.web.session.SessionManagementFilter@72e9f0f7, org.springframework.security.web.access.ExceptionTranslationFilter@7d31fb6c, org.springframework.security.web.access.intercept.AuthorizationFilter@5101b9]
+2023-09-15T14:47:54.125+01:00  INFO 17400 --- [    Test worker] .DoctorAppointmentSystemApplicationTests : Started DoctorAppointmentSystemApplicationTests in 17.792 seconds (process running for 18.939)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

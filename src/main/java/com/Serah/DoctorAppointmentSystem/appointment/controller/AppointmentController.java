@@ -23,30 +23,4 @@ private AppointmentService appointmentService;
         return appointmentService.bookAppointment(appointmentRequest);
     }
 
-    @GetMapping("/getAllAppointments")
-    public ResponseEntity<List<AppointmentResponse>> getAllAppointments(){
-        return ResponseEntity.ok(appointmentService.findAllAppointments());
-    }
-
-
-    @GetMapping("user")
-    public ResponseEntity<List<AppointmentResponse>> findAppointmentByUser(@RequestParam("user") String username){
-        return ResponseEntity.ok(appointmentService.findAppointmentByUser(username));
-    }
-
-
-
-
-    @PutMapping("{id}")
-    public ResponseEntity<AppointmentResponse> updateAppointmentById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(appointmentService.updateAppointment(id));
-    }
-
-
-//    @PutMapping("/accept/{doctorId}/{appointmentId}")
-//    public String acceptAppointment(
-//            @PathVariable Long doctorId,
-//            @PathVariable Long appointmentId) {
-//        return appointmentService.acceptAppointment(doctorId, appointmentId);
-//    }
 }
