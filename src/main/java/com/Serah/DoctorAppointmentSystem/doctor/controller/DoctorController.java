@@ -62,4 +62,7 @@ public class DoctorController {
     public List<Doctor> getDoctorsBySpeciality(@PathVariable(name = "speciality",required = true) String speciality) {
         return doctorService.getDoctorsBySpeciality(speciality);
     }
+
+
+
 }

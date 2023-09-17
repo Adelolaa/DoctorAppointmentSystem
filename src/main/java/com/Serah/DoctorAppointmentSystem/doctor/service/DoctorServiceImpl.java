@@ -1,5 +1,7 @@
 package com.Serah.DoctorAppointmentSystem.doctor.service;
 
+import com.Serah.DoctorAppointmentSystem.appointment.entity.Appointment;
+import com.Serah.DoctorAppointmentSystem.appointment.repository.AppointmentRepository;
 import com.Serah.DoctorAppointmentSystem.doctor.dto.DoctorRequest;
 import com.Serah.DoctorAppointmentSystem.doctor.dto.GetRequest;
 import com.Serah.DoctorAppointmentSystem.doctor.entity.Doctor;
@@ -13,8 +15,10 @@ import com.Serah.DoctorAppointmentSystem.role.RoleRepository;
 import com.Serah.DoctorAppointmentSystem.security.JwtTokenProvider;
 import com.Serah.DoctorAppointmentSystem.security.dto.LoginRequest;
 import com.Serah.DoctorAppointmentSystem.utils.AccountUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,17 +49,16 @@ public class DoctorServiceImpl implements DoctorService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final JwtTokenProvider jwtTokenProvider;
-
+     @Autowired
+    AppointmentRepository appointmentRepository;
     @Override
     public Response createAccount(DoctorRequest doctorRequest) {
-        String uniqueIdentifier = UUID.randomUUID().toString();
         if (doctorRepository.existsByEmail(doctorRequest.getEmail()))
             return Response.builder()
                     .responseCode(AccountUtil.USER_EXISTS_CODE)
                     .responseMessage(AccountUtil.USER_EXISTS_MESSAGE)
                     .data(null)
                     .build();
-
 
         Doctor doctor = Doctor.builder()
                 .name(doctorRequest.getName())
@@ -66,9 +69,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .workingHours(doctorRequest.getWorkingHours())
                 .description(doctorRequest.getDescription())
                 .gender(doctorRequest.getGender())
-                .uniqueIdentifier(uniqueIdentifier)
                 .build();
-
 
         Roles roles = roleRepository.findByRoleName("ROLE_DOCTOR").orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -81,12 +82,10 @@ public class DoctorServiceImpl implements DoctorService {
         EmailDetails message = EmailDetails.builder()
                 .recipient(doctorRequest.getEmail())
                 .subject("Doc on the Go")
-                .messageBody("Congratulations! your Doc on the Go account has been successfully created " +
+                .messageBody("Congratulations! your Doc on the Go account has been successfully created. " +
                         "Healthcare that goes where you go")
                 .build();
         emailService.sendSimpleEmail(message);
-
-
 
         return Response.builder()
                 .responseCode(AccountUtil.ACCOUNT_CREATION_CODE)
@@ -138,6 +137,14 @@ public class DoctorServiceImpl implements DoctorService {
             String encoder = passwordEncoder.encode(loginRequest.getPassword());
             doctor.setPassword(encoder);
             doctorRepository.save(doctor);
+
+            EmailDetails message = EmailDetails.builder()
+                    .recipient(doctor.getEmail())
+                    .subject("Doc on the Go")
+                    .messageBody("Password Reset Successful")
+                    .build();
+            emailService.sendSimpleEmail(message);
+
 
             return ResponseEntity.ok(Response.builder()
                     .responseCode(AccountUtil.SUCCESS_MESSAGE_CODE)
@@ -204,42 +211,21 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorRepository.findBySpeciality(speciality);
 
     }
-//    @Override
-//    public List<Doctor> getDoctorsBySpeciality(String speciality) {
-//        List<Doctor> doctors = doctorRepository.findBySpeciality(speciality);
-//        return doctors;
 
 
     @Override
-    public Doctor randomDoctorOnSpecificDay(LocalDate localDate) {
-        List<Doctor> doctors = new ArrayList<>(doctorRepository.findAll().stream()
-                .filter(doctor -> doctor.getAvailableDays()
-                        .contains(localDate.getDayOfWeek().toString())).toList());
-        Collections.shuffle(doctors);
-        return doctors.iterator().next();
-
-    }
-
-
-    @Override
-    public Doctor randomizingRandomDoctors(Doctor previousDoctor, LocalDate localDate) {
-        List<Doctor> doctors = doctorRepository.findAll().stream().filter(doctor ->
-                doctor.getAvailableDays().contains(localDate.getDayOfWeek().toString())).toList();
-        List<Doctor> newDoctors = new ArrayList<>(doctors.stream().filter(doctor ->
-                !doctor.equals(previousDoctor)).toList());
-        Collections.shuffle(newDoctors);
-        return doctors.iterator().next();
-    }
-
-    @Override
+    @Transactional
     public String deleteDoctor(long id) {
-            Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-            doctor.setAvailable(false);
-            doctorRepository.save(doctor);
-            return "Doctor  deleted successfully";
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found"));
+        System.out.println(doctor.getName());
+          appointmentRepository.deleteAppointmentByDoctor(doctor);
+        doctorRepository.delete(doctor);
+        return "Doctor deleted successfully";
     }
-
 
 }
+
+
+
 
 

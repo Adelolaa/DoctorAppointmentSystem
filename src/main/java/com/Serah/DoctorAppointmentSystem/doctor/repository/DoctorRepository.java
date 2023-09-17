@@ -18,7 +18,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
 
     List<Doctor> findBySpeciality(String speciality);
-        Optional<Appointment> findByUniqueIdentifier(String UniqueIdentifier);
+
 
 }
 

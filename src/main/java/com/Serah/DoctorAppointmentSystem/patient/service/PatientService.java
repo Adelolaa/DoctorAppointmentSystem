@@ -14,12 +14,9 @@ public interface PatientService {
 
     ResponseEntity <Response> signin (LoginRequest loginRequest);
     ResponseEntity<Response> resetPassword(LoginRequest loginRequest);
-
     List<Response> getAllPatient();
 
     Response getPatientByEmail(String email);
-    ResponseEntity<Response>updatePatient(PatientRequest patientRequest);
-
 
 }
 

@@ -20,13 +20,7 @@ public interface DoctorService {
 
      List<Response> getAllDoctor();
 
-//    List<Doctor> findDoctorBySpecialty(String specialty);
-
     List<Doctor> getDoctorsBySpeciality(String speciality);
-
-    Doctor randomDoctorOnSpecificDay(LocalDate localDate);
-
-    Doctor randomizingRandomDoctors(Doctor previousDoctor, LocalDate localDate);
 
     String deleteDoctor(long id);
 }

@@ -14,41 +14,36 @@ import java.util.List;
 public class PatientController {
     private final PatientService patientService;
 
-    public PatientController(PatientService patientService){
+    public PatientController(PatientService patientService) {
 
         this.patientService = patientService;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Response> signup(@RequestBody PatientRequest patientRequest){
+    public ResponseEntity<Response> signup(@RequestBody PatientRequest patientRequest) {
         System.out.println("==signing up patient===");
         return patientService.signup(patientRequest);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<Response> signin(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<Response> signin(@RequestBody LoginRequest loginRequest) {
         return patientService.signin(loginRequest);
     }
 
     @PutMapping("/resetPassword")
-    public ResponseEntity<Response> resetPassword(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<Response> resetPassword(@RequestBody LoginRequest loginRequest) {
         return patientService.resetPassword(loginRequest);
     }
 
     @GetMapping("/{Email}")
-    public ResponseEntity<Response> getPatientByEmail(@PathVariable(name = "Email",required = true) String email){
+    public ResponseEntity<Response> getPatientByEmail(@PathVariable(name = "Email", required = true) String email) {
         return ResponseEntity.ok(patientService.getPatientByEmail(email));
     }
 
     @GetMapping("/getAllPatients")
-    public List<Response> getAllPatients(){
+    public List<Response> getAllPatients() {
         return patientService.getAllPatient();
     }
 
-
-@PostMapping("/updatePatient")
-public ResponseEntity<Response> updatePatient(@RequestBody PatientRequest patientRequest){
-        return ResponseEntity.ok(patientService.updatePatient(patientRequest).getBody());
-}
 
 }
