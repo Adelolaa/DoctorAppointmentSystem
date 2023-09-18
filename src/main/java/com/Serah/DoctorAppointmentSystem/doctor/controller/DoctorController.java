@@ -53,10 +53,7 @@ public class DoctorController {
 
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteDoctor(@PathVariable("id") long id) {
-        return ResponseEntity.ok(doctorService.deleteDoctor(id));
-    }
+
 
     @GetMapping("/get/{speciality}")
     public List<Doctor> getDoctorsBySpeciality(@PathVariable(name = "speciality",required = true) String speciality) {

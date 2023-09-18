@@ -22,5 +22,4 @@ public interface DoctorService {
 
     List<Doctor> getDoctorsBySpeciality(String speciality);
 
-    String deleteDoctor(long id);
 }

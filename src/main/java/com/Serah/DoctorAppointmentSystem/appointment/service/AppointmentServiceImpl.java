@@ -11,6 +11,7 @@ import com.Serah.DoctorAppointmentSystem.email.EmailDetails;
 import com.Serah.DoctorAppointmentSystem.email.EmailService;
 import com.Serah.DoctorAppointmentSystem.patient.entity.Patient;
 import com.Serah.DoctorAppointmentSystem.patient.repository.PatientRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             Optional<Appointment> appointmentOptional = appointmentRepository.findAppointmentByDoctorIdAndAppointmentDate(
                     appointmentRequest.getDoctorId(), appointmentRequest.getAppointmentDate());
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-           UserDetails userDetails = (UserDetails) principal;
+            UserDetails userDetails = (UserDetails) principal;
             String email = userDetails.getUsername();
             System.out.println(userDetails.getUsername());
             if (appointmentOptional.isPresent()) {

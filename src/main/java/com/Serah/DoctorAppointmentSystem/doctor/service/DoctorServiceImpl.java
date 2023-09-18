@@ -213,17 +213,10 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
 
-    @Override
-    @Transactional
-    public String deleteDoctor(long id) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found"));
-        System.out.println(doctor.getName());
-          appointmentRepository.deleteAppointmentByDoctor(doctor);
-        doctorRepository.delete(doctor);
-        return "Doctor deleted successfully";
+
     }
 
-}
+
 
 
 
